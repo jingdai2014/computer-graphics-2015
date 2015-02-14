@@ -29,6 +29,9 @@ void scenehdl::draw()
 	/* TODO Assignment 1: Draw all of the objects, and
 	 * if enabled, draw the normals and the cameras.
 	 */
+	 objects[active_object]->draw(canvas);
+	 //cout<<"scene_draw_end"<<endl;
+
 
 	/* TODO Assignment 2: Pass the lights to the shaders through canvashdl::uniform.
 	 * If enabled, draw the lights.

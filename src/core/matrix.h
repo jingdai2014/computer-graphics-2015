@@ -204,11 +204,6 @@ struct mat
 		for (int i = a; i < b; i++)
 			for (int j = 0; j < h; j++)
 				result.data[i-a][j] = data[i][j];
-
-		for (int i = b-a; i < v; i++)
-			for (int j = 0; j < h; j++)
-				result.data[i][j] = 0;
-
 		return result;
 	}
 
@@ -244,10 +239,6 @@ struct mat
 			for (int j = a; j < b; j++)
 				result.data[i][j-a] = data[i][j];
 
-		for (int i = 0; i < v; i++)
-			for (int j = b-a; j < h; j++)
-				result.data[i][j] = 0;
-
 		return result;
 	}
 
@@ -265,15 +256,6 @@ struct mat
 		for (int i = va; i < vb; i++)
 			for (int j = ha; j < hb; j++)
 				result.data[i-va][j-ha] = data[i][j];
-
-		for (int i = vb-va; i < v; i++)
-			for (int j = 0; j < h; j++)
-				result.data[i][j] = 0;
-
-		for (int i = 0; i < v; i++)
-			for (int j = hb-ha; j < h; j++)
-				result.data[i][j] = 0;
-
 		return result;
 	}
 

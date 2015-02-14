@@ -84,7 +84,6 @@ void canvashdl::set_matrix(matrix_id matid)
 /* load_identity
  *
  * Set the active matrix to the identity matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glLoadIdentity.xml
  */
 void canvashdl::load_identity()
 {
@@ -94,7 +93,6 @@ void canvashdl::load_identity()
 /* rotate
  *
  * Multiply the active matrix by a rotation matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glRotate.xml
  */
 void canvashdl::rotate(float angle, vec3f axis)
 {
@@ -104,7 +102,6 @@ void canvashdl::rotate(float angle, vec3f axis)
 /* translate
  *
  * Multiply the active matrix by a translation matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glTranslate.xml
  */
 void canvashdl::translate(vec3f direction)
 {
@@ -114,7 +111,6 @@ void canvashdl::translate(vec3f direction)
 /* scale
  *
  * Multiply the active matrix by a scaling matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glScale.xml
  */
 void canvashdl::scale(vec3f size)
 {
@@ -124,7 +120,6 @@ void canvashdl::scale(vec3f size)
 /* perspective
  *
  * Multiply the active matrix by a perspective projection matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluPerspective.xml
  */
 void canvashdl::perspective(float fovy, float aspect, float n, float f)
 {
@@ -134,7 +129,6 @@ void canvashdl::perspective(float fovy, float aspect, float n, float f)
 /* frustum
  *
  * Multiply the active matrix by a frustum projection matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glFrustum.xml
  */
 void canvashdl::frustum(float l, float r, float b, float t, float n, float f)
 {
@@ -144,19 +138,12 @@ void canvashdl::frustum(float l, float r, float b, float t, float n, float f)
 /* ortho
  *
  * Multiply the active matrix by an orthographic projection matrix.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/glOrtho.xml
  */
 void canvashdl::ortho(float l, float r, float b, float t, float n, float f)
 {
 	// TODO Assignment 1: Multiply the active matrix by an orthographic projection matrix.
 }
 
-/* look_at
- *
- * Move and orient the modelview so the camera is at the 'at' position focused on the 'eye'
- * position and rotated so the 'up' vector is up
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
- */
 void canvashdl::look_at(vec3f eye, vec3f at, vec3f up)
 {
 	// TODO Assignment 1: Emulate the functionality of gluLookAt
@@ -177,7 +164,6 @@ vec3f canvashdl::to_window(vec2i pixel)
 /* unproject
  *
  * Unproject a window coordinate into world coordinates.
- * This implements: https://www.opengl.org/sdk/docs/man2/xhtml/gluUnProject.xml
  */
 vec3f canvashdl::unproject(vec3f window)
 {
@@ -188,26 +174,19 @@ vec3f canvashdl::unproject(vec3f window)
 /* shade_vertex
  *
  * This is the vertex shader.
- * v[0] to v[2] is position
- * v[3] to v[5] is normal
- * v[7] to v[8] is texture coordinates
- * The result from this function is interpolated and passed on to the fragment shader
- * (its also used to draw the geometry during rasterization)
- * Note that the only requirements for the returned values are that the first 3 components
- * be a projected position. The rest are yours to decide what to do with.
  */
 vec8f canvashdl::shade_vertex(vec8f v)
 {
 	// TODO Assignment 1: Do all of the necessary transformations (normal, projection, modelview, etc)
 
 	// TODO Assignment 2: Implement Flat and Gouraud shading.
-	return vec8f();
+	//return vec8f();
+	return v;
 }
 
 /* shade_fragment
  *
  * This is the fragment shader. The pixel color is determined here.
- * the values for v are the interpolated result of whatever you returned from the vertex shader
  */
 vec3f canvashdl::shade_fragment(vec8f v)
 {
@@ -216,7 +195,7 @@ vec3f canvashdl::shade_fragment(vec8f v)
 	/* TODO Assignment 2: Figure out the pixel color due to lighting and materials
 	 * and implement phong shading.
 	 */
-	return vec3f();
+	return vec3f(255,255,255);
 }
 
 /* plot
@@ -226,6 +205,12 @@ vec3f canvashdl::shade_fragment(vec8f v)
 void canvashdl::plot(vec2i xy, vec8f v)
 {
 	// TODO Assignment 1: Plot a pixel, calling the fragment shader.
+	//cout<<"canvas_plot"<<endl;
+	vec3f color = shade_fragment(v);
+/////////////////to_window//////////////////////////
+	color_buffer[(int)((xy[1]+0.5*height)*width+xy[0]+0.5*width)*3] = color[0];
+	color_buffer[(int)((xy[1]+0.5*height)*width+xy[0]+0.5*width)*3+1] = color[1];
+	color_buffer[(int)((xy[1]+0.5*height)*width+xy[0]+0.5*width)*3+2] = color[2];
 
 	// TODO Assignment 2: Check the pixel depth against the depth buffer.
 }
@@ -237,6 +222,9 @@ void canvashdl::plot(vec2i xy, vec8f v)
 void canvashdl::plot_point(vec8f v)
 {
 	// TODO Assignment 1: Plot a point given in window coordinates.
+	//cout<<"canvas_plotpoint"<<endl;
+	vec2i u = vec2i((int)v[0],(int)v[1]);
+	plot(u,v);
 }
 
 /* plot_line
@@ -285,6 +273,11 @@ void canvashdl::plot_triangle(vec8f v1, vec8f v2, vec8f v3)
 void canvashdl::draw_points(const vector<vec8f> &geometry)
 {
 	// TODO Assignment 1: Clip the points against the frustum, call the vertex shader, and then draw them.
+	//cout<<"canvas_draw"<<endl;
+	for(int i=0; i<geometry.size(); i++){
+		plot_point(geometry[i]);
+	}
+	//out<<"canvas_draw_end"<<endl;
 }
 
 /* Draw a set of 3D lines on the canvas. Each point in geometry
@@ -408,6 +401,7 @@ void canvashdl::viewport(int w, int h)
 
 void canvashdl::swap_buffers()
 {
+
 	if (!initialized)
 		init_opengl();
 

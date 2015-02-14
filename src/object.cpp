@@ -1,6 +1,8 @@
 #include "object.h"
 #include "canvas.h"
 
+using namespace std;
+
 rigidhdl::rigidhdl()
 {
 
@@ -18,6 +20,9 @@ rigidhdl::~rigidhdl()
 void rigidhdl::draw(canvashdl *canvas)
 {
 	// TODO Assignment 1: Send the rigid body geometry to the renderer
+	//cout<<"rigid_draw"<<endl;
+	canvas->draw_points(geometry);
+	//cout<<"rigid_draw_end"<<endl;
 }
 
 objecthdl::objecthdl()
@@ -41,6 +46,8 @@ objecthdl::~objecthdl()
 void objecthdl::draw(canvashdl *canvas)
 {
 	// TODO Assignment 1: Send transformations and geometry to the renderer to draw the object
+	rigid[0].draw(canvas);
+	//cout<<"object_draw_end"<<endl;
 }
 
 /* draw_bound

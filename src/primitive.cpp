@@ -9,7 +9,23 @@ boxhdl::boxhdl(float width, float height, float depth)
 	/* TODO Assignment 1: Generate the geometry and indices required to make a box.
 	 * Calculate its bounding box.
 	 */
-}
+	 rigid.push_back(rigidhdl());
+	 rigid[0].geometry.reserve(8);
+	 float length = 0.5*sqrt(width*width+height*height+depth*depth);
+	 rigid[0].geometry.push_back(vec8f(0.5*width,0.5*height,0.5*depth,0.5*width/length,0.5*height/length,0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(-0.5*width,0.5*height,0.5*depth,-0.5*width/length,0.5*height/length,0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(-0.5*width,-0.5*height,0.5*depth,-0.5*width/length,-0.5*height/length,0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(0.5*width,-0.5*height,0.5*depth,0.5*width/length,-0.5*height/length,0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(0.5*width,0.5*height,-0.5*depth,0.5*width/length,0.5*height/length,-0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(-0.5*width,0.5*height,-0.5*depth,-0.5*width/length,0.5*height/length,-0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(-0.5*width,-0.5*height,-0.5*depth,-0.5*width/length,-0.5*height/length,-0.5*depth/length,0.0,0.0));
+	 rigid[0].geometry.push_back(vec8f(0.5*width,-0.5*height,-0.5*depth,0.5*width/length,-0.5*height/length,-0.5*depth/length,0.0,0.0));
+	 
+	 //rigid[0].indices.push_back(......)
+
+	 bound = vec6f(-0.5*width,0.5*width,-0.5*height,0.5*height,-0.5*depth,0.5*depth);
+
+}	
 
 boxhdl::~boxhdl()
 {
@@ -80,6 +96,19 @@ cylinderhdl::cylinderhdl(float radius, float height, int slices)
 	/* TODO Assignment 1: Generate the geometry and indices required to make a cylinder.
 	 * Calculate its bounding box.
 	 */
+	 rigid[0].geometry.reserve(2*slices);
+	 float length = sqrt(radius*radius+0.25*height*height);
+	 for (int i = 0; i < slices; i++){
+	 	rigid[0].geometry.push_back(vec8f(radius*cos(2.0*m_pi*(float)i/(float)slices), 0.5*height, radius*sin(2.0*m_pi*(float)i/(float)slices),
+	 	radius*cos(2.0*m_pi*(float)i/(float)slices)/length, 0.5*height/length, radius*sin(2.0*m_pi*(float)i/(float)slices)/length,0.0,0.0));
+		rigid[0].geometry.push_back(vec8f(radius*cos(2.0*m_pi*(float)i/(float)slices), 0.5*height, -radius*sin(2.0*m_pi*(float)i/(float)slices),
+	 	radius*cos(2.0*m_pi*(float)i/(float)slices)/length, 0.5*height/length, -radius*sin(2.0*m_pi*(float)i/(float)slices)/length,0.0,0.0));
+	 }
+
+	 //rigid[0].indices.push_back(......)
+
+	 bound = vec6f(-radius,radius,-0.5*height,0.5*height,-radius,radius);
+
 }
 
 cylinderhdl::~cylinderhdl()
@@ -96,6 +125,17 @@ pyramidhdl::pyramidhdl(float radius, float height, int slices)
 	/* TODO Assignment 1: Generate the geometry and indices required to make a pyramid.
 	 * Calculate its bounding box.
 	 */
+	 rigid[0].geometry.reserve(1+slices);
+	 rigid[0].geometry.push_back(vec8f(0.0, height, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0));
+	 for (int i = 0; i < slices; i++){
+	 	rigid[0].geometry.push_back(vec8f(radius*cos(2.0*m_pi*(float)i/(float)slices), 0.0, radius*sin(2.0*m_pi*(float)i/(float)slices), 
+		cos(2.0*m_pi*(float)i/(float)slices), 0.0, sin(2.0*m_pi*(float)i/(float)slices), 0.0, 0.0));
+	 }
+
+	 //rigid[0].indices.push_back(......)
+
+	 bound = vec6f(-radius,radius,0,height,-radius,radius);
+
 }
 
 pyramidhdl::~pyramidhdl()
